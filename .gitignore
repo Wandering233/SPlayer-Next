@@ -1,44 +1,33 @@
 ```
+# Build outputs
+out/
+dist/
+build/
+
 # Dependencies
 node_modules/
-
-# Build outputs
-android/app/build/
-android/build/
-build/
-dist/
-
-# Gradle
-.gradle/
-*.gradle
-
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-*.tmp
-
-# Logs
-*.log
 
 # Environment
 .env
 .env.local
 *.env.*
 
-# Coverage
-coverage/
-htmlcov/
-.coverage
+# Editors
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# Temp files
+*.tmp
+*.swp
 
 # Python
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-.Python
-*.so
 
 # Compressed files
 *.zip
