@@ -151,7 +151,6 @@ export const useSettingsStore = defineStore(
       snapToLyric: false,
       showLyricInBar: true,
       preloadNextTrack: false,
-      searchPlayBehavior: "current",
     });
 
     /** 强迫症设置 */

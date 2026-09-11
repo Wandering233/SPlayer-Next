@@ -8,17 +8,13 @@ on:
 permissions:
   issues: write
 
-concurrency:
-  group: issue-${{ github.event.issue.number }}
-  cancel-in-progress: false
-
 jobs:
   issue-handler:
     runs-on: ubuntu-latest
     steps:
       # 自动欢迎
       - name: Welcome Comment
-        if: github.event_name == 'issues' && github.event.action == 'opened' && github.event.issue.user.type != 'Bot'
+        if: github.event_name == 'issues' && github.event.action == 'opened'
         uses: actions/github-script@v8
         with:
           script: |
@@ -28,11 +24,11 @@ jobs:
               repo: context.repo.repo,
               issue_number: context.issue.number,
               body: [
-                `👋 @${login}`,
+                `👋 您好 @${login}，感谢提交 Issue！`,
+                `🚀 我们已经收到您的反馈，会尽快确认您的问题。`,
                 ``,
-                `感谢提交 Issue！我们已经收到您的反馈，会尽快确认您的问题。`,
-                ``,
-                `Thanks for opening this issue! We have received your report and will review it as soon as possible.`,
+                `👋 Hi @${login}, thanks for opening this issue!`,
+                `🚀 We have received your report and will review it as soon as possible.`,
               ].join('\n'),
             });
 
@@ -42,15 +38,12 @@ jobs:
         uses: actions/github-script@v8
         with:
           script: |
-            const login = context.payload.issue.user.login;
             const labelName = context.payload.label.name;
             await github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
               body: [
-                `👋 @${login}`,
-                ``,
                 `抱歉，由于该 Issue 被标记为 **${labelName}**，将自动关闭。`,
                 `如果您认为该 Issue 仍然有效，请补充信息后重新提交。`,
                 ``,
@@ -66,9 +59,9 @@ jobs:
               state_reason: 'not_planned',
             });
 
-      # need-info 标签回复（缺少复现步骤或信息）
-      - name: Auto Reply Need Info
-        if: github.event.action == 'labeled' && github.event.label.name == 'need-info'
+      # question 标签回复
+      - name: Auto Reply
+        if: github.event.action == 'labeled' && github.event.label.name == 'question'
         uses: actions/github-script@v8
         with:
           script: |
@@ -78,26 +71,24 @@ jobs:
               repo: context.repo.repo,
               issue_number: context.issue.number,
               body: [
-                `🤝 @${login}`,
-                ``,
-                `感谢您的反馈！`,
-                `由于缺少清晰的复现步骤或必要信息，我们暂时无法稳定复现该问题。`,
+                `🤝 您好 @${login}，感谢您的反馈！`,
+                `由于缺少清晰的复现步骤，我们暂时无法稳定复现该问题。`,
                 `请补充详细复现步骤、日志和环境信息，我们会尽快跟进。`,
                 ``,
-                `Thanks for your report!`,
+                `🤝 Hi @${login}, thanks for your report!`,
                 `We currently cannot reproduce this issue due to missing or unclear reproduction steps.`,
                 `Please provide detailed reproduction steps, logs, and environment info, and we will follow up soon.`,
               ].join('\n'),
             });
 
-      # 已确认问题（confirmed 标签，移除 need-info 标签并回复）
-      - name: Auto Confirm Issue
-        if: github.event.action == 'labeled' && github.event.label.name == 'confirmed'
+      # 已确认 bug（移除 question 标签并回复）
+      - name: Auto Confirm BUG
+        if: github.event.action == 'labeled' && github.event.label.name == 'bug'
         uses: actions/github-script@v8
         with:
           script: |
             const login = context.payload.issue.user.login;
-            for (const name of ['need-info']) {
+            for (const name of ['question']) {
               try {
                 await github.rest.issues.removeLabel({
                   owner: context.repo.owner,
@@ -114,11 +105,11 @@ jobs:
               repo: context.repo.repo,
               issue_number: context.issue.number,
               body: [
-                `🤝 @${login}`,
+                `🤝 您好 @${login}，感谢您的反馈！`,
+                `我们已经确认该问题，并计划在后续版本修复。`,
                 ``,
-                `感谢您的反馈！我们已经确认该问题，并计划在后续版本修复。`,
-                ``,
-                `Thanks for your report! We have confirmed this issue and plan to fix it in a future release.`,
+                `🤝 Hi @${login}, thanks for your report!`,
+                `We have confirmed this bug and plan to fix it in a future release.`,
               ].join('\n'),
             });
 
@@ -134,14 +125,12 @@ jobs:
               repo: context.repo.repo,
               issue_number: context.issue.number,
               body: [
-                `🤝 @${login}`,
-                ``,
-                `感谢您的反馈！`,
-                `由于当前信息不足或无法复现，我们将该 Issue 标记为 **invalid** 并关闭。`,
+                `🤝 您好 @${login}，感谢您的反馈！`,
+                `由于当前信息不足或无法复现，我们将该 Issue 标记为 invalid 并关闭。`,
                 `如果您可以提供稳定复现步骤，欢迎重新提交。`,
                 ``,
-                `Thanks for your report!`,
-                `We are marking this issue as **invalid** and closing it because we cannot reproduce it with the current information.`,
+                `🤝 Hi @${login}, thanks for your report!`,
+                `We are marking this issue as invalid and closing it because we cannot reproduce it with the current information.`,
                 `If you can provide reliable reproduction steps, feel free to open a new issue.`,
               ].join('\n'),
             });
@@ -153,7 +142,7 @@ jobs:
               state_reason: 'not_planned',
             });
 
-      # resolved（已修复并自动关闭，保留 bug 等分类标签）
+      # resolved（已修复并自动关闭）
       - name: Auto Resolved
         if: github.event.action == 'labeled' && github.event.label.name == 'resolved'
         uses: actions/github-script@v8
@@ -165,26 +154,24 @@ jobs:
               repo: context.repo.repo,
               issue_number: context.issue.number,
               body: [
-                `🎉 @${login}`,
-                ``,
-                `感谢您的反馈！该问题已修复，并将在当前开发版或下一个正式版中生效。`,
+                `🎉 您好 @${login}，感谢您的反馈！`,
+                `该问题已修复，并将在当前开发版或下一个正式版中生效。`,
                 `若您仍能复现该问题，欢迎重新提交新的 Issue。`,
                 ``,
-                `Thanks for your report! This issue has been resolved and will be available in the current dev build or next stable release.`,
+                `🎉 Hi @${login}, thanks for your report!`,
+                `This issue has been resolved and will be available in the current dev build or next stable release.`,
                 `If you can still reproduce this problem, please open a new issue.`,
               ].join('\n'),
             });
-            for (const name of ['need-info']) {
-              try {
-                await github.rest.issues.removeLabel({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: context.issue.number,
-                  name,
-                });
-              } catch (error) {
-                if (error.status !== 404) throw error;
-              }
+            try {
+              await github.rest.issues.removeLabel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                name: 'bug',
+              });
+            } catch (error) {
+              if (error.status !== 404) throw error;
             }
             await github.rest.issues.update({
               owner: context.repo.owner,

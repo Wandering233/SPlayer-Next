@@ -23,7 +23,6 @@ interface MobileSong {
     size_ape?: number;
     size_flac?: number;
     size_192ogg?: number;
-    size_hires?: number;
     size_new?: number[];
     hires_sample?: number;
     hires_bitdepth?: number;
@@ -86,28 +85,19 @@ const createSearchId = (): string => {
 const searchMobile = (keywords: string, page: number, limit: number, searchType: number) =>
   qmRequest<MobileSearchResponse>(
     "music.search.SearchCgiService",
-    "DoSearchForQQMusicLite",
+    "DoSearchForQQMusicMobile",
     {
-      search_id: createSearchId(),
-      remoteplace: "search.android.keyboard",
+      searchid: createSearchId(),
       query: keywords,
       page_num: page,
       num_per_page: limit,
       search_type: searchType,
-      highlight: 0,
-      nqc_flag: 0,
-      page_id: 1,
+      highlight: true,
       grp: 1,
+      selectors: {},
+      vec_selectors: [],
     },
-    {
-      session: false,
-      auth: false,
-      comm: {
-        tmeAppID: "qqmusiclight",
-        cv: "1003006",
-        v: "1003006",
-      },
-    },
+    { session: false },
   );
 
 const searchSongs = async (keywords: string, page: number, limit: number) => {
@@ -135,7 +125,7 @@ const searchSongs = async (keywords: string, page: number, limit: number) => {
       sizeApe: song.file?.size_ape ?? 0,
       sizeFlac: song.file?.size_flac ?? 0,
       sizeOgg: song.file?.size_192ogg ?? 0,
-      sizeHiRes: song.file?.size_hires || song.file?.size_new?.[0] || 0,
+      sizeHiRes: song.file?.size_new?.[0] ?? 0,
       hiResSampleRate: song.file?.hires_sample ?? 0,
       hiResBitDepth: song.file?.hires_bitdepth ?? 0,
       cover: pictureMid

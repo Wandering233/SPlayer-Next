@@ -36,25 +36,24 @@ watch(
   { immediate: true },
 );
 
-/** splash 最短展示时长（ms） */
-const SPLASH_MIN_MS = 1100;
+/** splash 笔画动画总时长（ms） */
+const SPLASH_ANIM_MS = 2050;
 
-/** splash 淡出时长（ms） */
-const SPLASH_FADE_MS = 300;
+/** 标记 splash 定时器是否已触发 */
+let splashTimerFired = false;
 
-/** 最短展示计时 */
-const splashMinElapsed = new Promise<void>((resolve) => setTimeout(resolve, SPLASH_MIN_MS));
-
-/** 等待首帧绘制完成 */
-const nextPaintedFrame = (): Promise<void> =>
-  new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
-
-/** 淡出并移除 splash 层 */
+/** 移除 splash 层 */
 const removeSplash = (): void => {
   const el = document.getElementById("app-loading");
   if (!el) return;
   el.classList.add("hidden");
-  setTimeout(() => el.remove(), SPLASH_FADE_MS + 50);
+  el.addEventListener("transitionend", () => el.remove(), { once: true });
+};
+
+/** 挂载后移除 */
+const onSplashTimerDone = (): void => {
+  splashTimerFired = true;
+  removeSplash();
 };
 
 /**
@@ -76,13 +75,18 @@ const bootstrapPlayback = async (): Promise<void> => {
 };
 
 // 初始化程序
-router.isReady().then(async () => {
+router.isReady().then(() => {
   // 挂载应用
   app.mount("#app");
-  // 淡出加载动画
-  await Promise.all([splashMinElapsed, nextPaintedFrame()]);
-  removeSplash();
-  setTimeout(() => bootstrapPlayback().catch(console.error), SPLASH_FADE_MS);
+  // 计算剩余时间
+  const elapsed = performance.now() - (window.__splashStart ?? 0);
+  const remaining = Math.max(0, SPLASH_ANIM_MS - elapsed);
+  setTimeout(onSplashTimerDone, remaining);
+  if (!splashTimerFired) {
+    setTimeout(removeSplash, SPLASH_ANIM_MS + 100);
+  }
+  // 初始化播放器与冷启动分发
+  bootstrapPlayback().catch(console.error);
   // 初始化快捷键
   useHotkeyStore()
     .init()

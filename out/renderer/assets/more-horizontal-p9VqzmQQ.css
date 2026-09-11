@@ -1,0 +1,11 @@
+
+.s-icon-swap[data-v-58be9d33] {
+  transition:
+    opacity 0.3s cubic-bezier(0.2, 0, 0, 1),
+    transform 0.3s cubic-bezier(0.2, 0, 0, 1);
+}
+.s-icon-swap-hidden[data-v-58be9d33] {
+  opacity: 0;
+  transform: scale(0.25);
+  pointer-events: none;
+}

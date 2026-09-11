@@ -1,27 +1,66 @@
-node_modules
-dist
-out
-build
-.DS_Store
-.eslintcache
-.claude
-.agents
-docs/superpowers
-docs/.vitepress/cache
-docs/.vitepress/dist
-skills-lock.json
-*.log*
-.vscode/settings.json
-.idea
+```
+# Dependencies
+node_modules/
 
-# Rust build artifacts
-**/target
-native/*/*.node
-native/*/*.tmp
-native/*/*.swp
-# native/*/index.d.ts
-package-lock.json
+# Build outputs
+android/app/build/
+android/build/
+build/
+dist/
 
-# Code signing certificates
-*.pfx
-*.p12
+# Gradle
+.gradle/
+*.gradle
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
+*.env.*
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+
+# Compressed files
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
+```

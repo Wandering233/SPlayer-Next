@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import type { StyleValue } from "vue";
-import { usePopupZIndex } from "@/composables/useZIndex";
+import IconLucideChevronDown from "~icons/lucide/chevron-down";
+import IconLucideCheck from "~icons/lucide/check";
+import IconLucideSearch from "~icons/lucide/search";
+import IconLucideX from "~icons/lucide/x";
 
 export type SComboboxValue = string | number;
 
@@ -50,8 +53,6 @@ const props = withDefaults(defineProps<SComboboxProps>(), {
 const emit = defineEmits<{
   "update:modelValue": [value: SComboboxValue | SComboboxValue[]];
 }>();
-
-const { zIndex, onOpenChange } = usePopupZIndex();
 
 const { t } = useI18n();
 
@@ -139,7 +140,6 @@ const compareByValue = (a: unknown, b: unknown): boolean => {
     :disabled="disabled"
     :by="compareByValue"
     @update:model-value="handleModelUpdate"
-    @update:open="onOpenChange"
   >
     <ComboboxAnchor as-child>
       <ComboboxTrigger
@@ -193,8 +193,7 @@ const compareByValue = (a: unknown, b: unknown): boolean => {
         position="popper"
         :side-offset="4"
         :collision-padding="12"
-        :style="{ zIndex }"
-        class="w-[var(--reka-popper-anchor-width)] overflow-hidden rounded-xl bg-surface-bright shadow-lg data-[state=open]:animate-select-in data-[state=closed]:animate-select-out"
+        class="z-400 w-[var(--reka-popper-anchor-width)] overflow-hidden rounded-xl bg-surface-bright shadow-lg data-[state=open]:animate-select-in data-[state=closed]:animate-select-out"
       >
         <!-- 搜索框 -->
         <div

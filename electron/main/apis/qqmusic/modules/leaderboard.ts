@@ -33,17 +33,12 @@ const leaderboard: QMModule = async (params) => {
     updateTime?: string;
     headPicUrl?: string;
     songInfoList?: ToplistSong[];
-  }>(
-    "musicToplist.ToplistInfoServer",
-    "GetDetail",
-    {
-      topid,
-      num: limit,
-      offset,
-      period,
-    },
-    { auth: false },
-  );
+  }>("musicToplist.ToplistInfoServer", "GetDetail", {
+    topid,
+    num: limit,
+    offset,
+    period,
+  });
 
   const songs = (data?.songInfoList ?? [])
     .map((item) => item.songInfo)

@@ -1,0 +1,805 @@
+
+.s-marquee-scrolling[data-v-d244644e] {
+  animation: s-marquee-scroll-d244644e var(--marquee-duration, 10s) linear var(--marquee-delay, 2s) infinite;
+}
+@keyframes s-marquee-scroll-d244644e {
+0% {
+    transform: translateX(0);
+}
+100% {
+    transform: translateX(calc(-50% - var(--marquee-gap, 50px) / 2));
+}
+}
+.s-marquee-mask[data-v-d244644e] {
+  mask-image: linear-gradient(
+    to right,
+    black 0%,
+    black calc(100% - var(--marquee-mask-width, 8px)),
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    black 0%,
+    black calc(100% - var(--marquee-mask-width, 8px)),
+    transparent 100%
+  );
+  animation: s-marquee-mask-fade-d244644e var(--marquee-duration, 10s) linear var(--marquee-delay, 2s)
+    infinite;
+}
+@keyframes s-marquee-mask-fade-d244644e {
+0%,
+  100% {
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black var(--marquee-mask-width, 8px),
+      black calc(100% - var(--marquee-mask-width, 8px)),
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black var(--marquee-mask-width, 8px),
+      black calc(100% - var(--marquee-mask-width, 8px)),
+      transparent 100%
+    );
+}
+}
+
+.spectrum-canvas[data-v-18549803] {
+  mask: linear-gradient(
+    90deg,
+    hsla(0, 0%, 100%, 0) 0,
+    hsla(0, 0%, 100%, 0.6) 5%,
+    #fff 12%,
+    #fff 88%,
+    hsla(0, 0%, 100%, 0.6) 95%,
+    hsla(0, 0%, 100%, 0)
+  );
+}
+
+.player-cover-fullscreen[data-v-fbe2c21f] {
+  mask-image: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.98) 10%,
+    rgba(0, 0, 0, 0.92) 22%,
+    rgba(0, 0, 0, 0.82) 32%,
+    rgba(0, 0, 0, 0.68) 42%,
+    rgba(0, 0, 0, 0.52) 52%,
+    rgba(0, 0, 0, 0.36) 62%,
+    rgba(0, 0, 0, 0.22) 72%,
+    rgba(0, 0, 0, 0.1) 82%,
+    rgba(0, 0, 0, 0.03) 92%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.background-render-wrapper[data-v-9a939266] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* 纯色模式 */
+.bg-solid-wrap[data-v-7928ad95] {
+  background-color: rgb(20, 20, 28);
+}
+.bg-solid-wrap .color[data-v-7928ad95] {
+  width: 100%;
+  height: 100%;
+  transition: background-color 0.5s ease;
+}
+.bg-solid-wrap[data-v-7928ad95]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* 模糊模式 */
+.bg-blur-wrap[data-v-7928ad95] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.bg-blur-wrap[data-v-7928ad95]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+.bg-blur-wrap .bg-img[data-v-7928ad95] {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.5);
+  filter: blur(45px) saturate(1.2);
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+.bg-blur-wrap .bg-img.active[data-v-7928ad95] {
+  opacity: 1;
+}
+
+/* 流体背景渐入 */
+.bg-fade-enter-active[data-v-7928ad95] {
+  transition: opacity 0.8s ease-in-out;
+}
+.bg-fade-leave-active[data-v-7928ad95] {
+  transition: opacity 0.3s ease-in;
+}
+.bg-fade-enter-from[data-v-7928ad95],
+.bg-fade-leave-to[data-v-7928ad95] {
+  opacity: 0;
+}
+.lp-root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  user-select: none;
+  cursor: default;
+  contain: strict;
+}
+
+.lp-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding-left: var(--lp-padding-x, 1em);
+  padding-right: var(--lp-padding-x, 1em);
+}
+
+/* ---- 歌词行 ---- */
+
+.lp-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--lp-line-padding, 0.4em 1em);
+  color: var(--lp-color, #fff);
+  font-size: inherit;
+  font-weight: inherit;
+  transform-origin: left;
+  opacity: 1;
+  contain: content;
+  pointer-events: none;
+  --ba: 0.2;
+  --da: 0.2;
+
+  &.duet {
+    text-align: right;
+    transform-origin: right;
+    color: var(--lp-duet-color, var(--lp-color, #fff));
+  }
+
+  /* 背景行（和声） */
+  &.bg {
+    font-size: var(--lp-bg-font-size, 0.75em);
+    padding-left: calc(1em / 0.75);
+    padding-right: calc(1em / 0.75);
+    transform-origin: left top;
+    opacity: 0.0001;
+    transition: opacity 0.25s;
+
+    &.active {
+      opacity: var(--lp-bg-active-opacity, 0.4);
+      transition: opacity 0.5s 0.25s;
+    }
+  }
+}
+
+/* ---- 内容包裹层（主歌词 + 副歌词） ---- */
+
+.lp-content {
+  position: relative;
+  width: fit-content;
+  max-width: 100%;
+
+  /* 悬停背景层 */
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -0.05em -0.4em -0.25em;
+    border-radius: 8px;
+    background-color: var(
+      --lp-hover-bg,
+      color-mix(in srgb, var(--lp-color, #fff) 14%, transparent)
+    );
+    opacity: 0;
+    z-index: -1;
+    transform: scale(1.05);
+    transition:
+      transform 0.35s ease,
+      opacity 0.35s ease;
+    pointer-events: none;
+  }
+}
+
+.lp-line.duet.bg {
+  transform-origin: right top;
+}
+
+.lp-line.duet .lp-content {
+  margin-left: auto;
+}
+
+/* ---- 对唱左右分栏 ---- */
+
+.lp-has-duet {
+  --lp-duet-indent: 15%;
+}
+
+.lp-has-duet .lp-line:not(.bg):not(.duet) {
+  padding-inline-end: var(--lp-duet-indent);
+}
+
+.lp-has-duet .lp-line.duet:not(.bg) {
+  padding-inline-start: var(--lp-duet-indent);
+}
+
+@media (max-width: 600px) {
+  .lp-has-duet {
+    --lp-duet-indent: 8%;
+  }
+}
+
+.lp-credit {
+  opacity: var(--lp-credit-opacity, 0.3);
+  pointer-events: auto !important; /* 启用交互并阻止点击穿透到下方的普通歌词行上 */
+  z-index: 10 !important; /* 提升层级，防止被普通歌词行（尤其是最后一行）遮挡和阻断点击 */
+  background: none !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+}
+
+.lp-credit:hover,
+.lp-credit:active {
+  background: none !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+}
+
+.lp-credit:empty {
+  display: none;
+}
+
+/* ---- 主文本 ---- */
+
+.lp-main {
+  position: relative;
+  max-width: 100%;
+  word-break: normal;
+  overflow-wrap: break-word;
+  pointer-events: auto;
+  overflow: visible;
+
+  & > span {
+    display: inline-block;
+    white-space: pre-wrap;
+    vertical-align: bottom;
+  }
+
+  /* 强调单词包裹层（逐字符拆分的容器） */
+  & > span.lp-emp-wrapper {
+    display: inline-block;
+    white-space: pre;
+    vertical-align: bottom;
+    /* 为缩放/辉光溢出预留空间，负 margin 抵消布局影响 */
+    padding: 1em;
+    margin: -1em;
+
+    & > span {
+      display: inline-block;
+      padding: 1em;
+      margin: -1em;
+    }
+  }
+}
+
+.lp-main:lang(zh) {
+  font-family: var(--lyric-font-zh, inherit);
+}
+
+.lp-main:lang(ja) {
+  font-family: var(--lyric-font-ja, inherit);
+}
+
+.lp-main:lang(ko) {
+  font-family: var(--lyric-font-ko, inherit);
+}
+
+.lp-main:lang(und-Latn) {
+  font-family: var(--lyric-font-latin, inherit);
+}
+
+/* ---- 副文本（翻译/音译） ---- */
+
+.lp-sub {
+  font-size: var(--lp-sub-font-size, max(0.5em, 10px));
+  line-height: var(--lp-sub-line-height, 1.5em);
+  opacity: calc(var(--pass, 1) * var(--lp-sub-opacity, 0.3));
+  color: var(--lp-sub-color, inherit);
+}
+
+/* ---- 间奏圆点 ---- */
+
+.lp-dots {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.2em 1em;
+  width: fit-content;
+  opacity: 0;
+  transform-origin: left center;
+  pointer-events: none;
+
+  & > span {
+    width: var(--lp-dot-size, 0.45em);
+    height: var(--lp-dot-size, 0.45em);
+    display: inline-block;
+    border-radius: 50%;
+    background-color: var(--lp-color, #fff);
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .lp-line:not(.bg) .lp-content {
+    cursor: pointer;
+    pointer-events: auto;
+
+    &:hover::before {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    &:active::before {
+      transform: scale(0.95);
+    }
+  }
+}
+.amll-lyric-player {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  color: var(--amll-lp-color, white);
+  contain: strict;
+  mix-blend-mode: plus-lighter;
+  font-size: var(--amll-lp-font-size, max(max(5vh, 2.5vw), 12px));
+  overflow: hidden;
+
+  @media screen and (width <= 768px) {
+    font-size: var(--amll-lp-font-size, max(8vw, 12px));
+  }
+
+  &.dom {
+    --amll-lp-line-width-aspect: .8;
+    --amll-lp-line-padding-x: 1em;
+    --amll-lp-bg-line-scale: .7;
+    user-select: none;
+    box-sizing: content-box;
+    z-index: 1;
+    line-height: 1.2;
+  }
+}
+
+@media screen and (width <= 768px) {
+  .amll-lyric-player {
+    --amll-lp-line-width-aspect: 1;
+    --amll-lp-line-padding-x: 0;
+  }
+}
+.FmKaba_lyricLineWrapper {
+  box-sizing: border-box;
+  width: 100%;
+  padding: .4em var(--lyric-line-padding-x);
+  will-change: transform, opacity, filter;
+  border-radius: .25em;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .3em;
+  transition: opacity .4s, filter .4s, background-color .25s;
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  &:hover {
+    background-color: var(--amll-lp-hover-bg-color, #fff1);
+  }
+
+  &:active {
+    background-color: var(--amll-lp-hover-bg-color, #ffffff05);
+  }
+}
+
+.FmKaba_lyricLine {
+  box-sizing: border-box;
+  width: var(--amll-lp-width, 100%);
+  min-width: var(--amll-lp-width, 100%);
+  max-width: var(--amll-lp-width, 100%);
+  contain: layout style paint;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 40px;
+  backface-visibility: hidden;
+  transform-origin: 0;
+  will-change: transform, filter, opacity;
+  height: fit-content;
+  margin: -.2em;
+  padding: .2em;
+  transition: box-shadow .25s;
+  position: relative;
+}
+
+.FmKaba_lyricDuetLine {
+  text-align: right;
+  transform-origin: 100%;
+}
+
+.FmKaba_lyricMainLine {
+  contain: layout style;
+  margin: -1em;
+  padding: 1em;
+  transition: opacity .3s .1s;
+
+  & span {
+    text-align: start;
+    vertical-align: bottom;
+    display: inline-block;
+  }
+
+  & .FmKaba_romanWord {
+    padding-inline-end: .3em;
+    font-size: .5em;
+    line-height: 1em;
+    display: flex;
+  }
+
+  & .FmKaba_rubyWord {
+    justify-content: center;
+    min-height: 1em;
+    font-size: .5em;
+    line-height: 1em;
+    display: flex;
+  }
+
+  & .FmKaba_wordWithRuby {
+    vertical-align: bottom;
+    flex-direction: column;
+    align-items: center;
+    display: inline-flex;
+  }
+
+  & .FmKaba_wordBody {
+    flex-direction: column;
+    align-items: center;
+    display: flex;
+  }
+
+  & > span, & span.FmKaba_emphasizeWrapper {
+    white-space: pre-wrap;
+    vertical-align: bottom;
+    will-change: transform, text-shadow;
+    contain: layout style;
+    margin: -1em;
+    padding: 1em;
+    display: inline-block;
+
+    &.FmKaba_emphasize, & span.FmKaba_emphasize {
+      backface-visibility: hidden;
+      margin: -1em;
+      padding: 1em;
+
+      & > span {
+        will-change: transform, text-shadow;
+        backface-visibility: hidden;
+        margin: -1em;
+        padding: 1em;
+      }
+    }
+  }
+}
+
+.FmKaba_lyricBgLine {
+  opacity: .4;
+  font-size: max(calc(1em * var(--amll-lp-bg-line-scale, .7)), 10px);
+  transition: background-color .25s, box-shadow .25s;
+
+  & .FmKaba_lyricMainLine {
+    padding: 1.2em 1em;
+  }
+
+  &.FmKaba_active {
+    opacity: .4;
+    transition: background-color .25s, box-shadow .25s;
+  }
+}
+
+.FmKaba_lyricSubLine {
+  opacity: .3;
+  font-size: max(.5em, 10px);
+  line-height: 1.5em;
+  transition: opacity .2s .25s;
+
+  @supports (mix-blend-mode: plus-lighter) {
+    opacity: .3;
+  }
+}
+
+.FmKaba_bottomLine {
+  cursor: default;
+  padding-top: 0;
+  padding-bottom: 0;
+  line-height: 1.8em;
+
+  &:empty {
+    height: 0;
+    margin: 0;
+    padding: 0;
+    display: none;
+  }
+}
+
+.FmKaba_bgWrapper {
+  top: 100%;
+  left: var(--lyric-line-padding-x);
+  z-index: -1;
+  align-items: inherit;
+  width: calc(100% - var(--lyric-line-padding-x) * 2);
+  visibility: visible;
+  pointer-events: auto;
+  opacity: 0;
+  transform-origin: 0 0;
+  flex-direction: column;
+  transition: opacity .3s;
+  display: flex;
+  position: absolute;
+}
+
+.FmKaba_bgWrapperTop {
+  transform-origin: 0 100%;
+  width: 100%;
+  margin-top: -999px;
+  position: relative;
+  top: auto;
+  bottom: auto;
+  left: 0;
+}
+
+.FmKaba_bgWrapperActive {
+  opacity: 1;
+  width: 100%;
+  position: relative;
+  top: auto;
+  bottom: auto;
+  left: 0;
+}
+
+.FmKaba_bgWrapperHidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.FmKaba_interludeDots {
+  opacity: 0;
+  transform-origin: center;
+  gap: .25em;
+  width: fit-content;
+  height: clamp(.5em, 1vh, 3em);
+  padding: 2.5% .75em;
+  transition: opacity .25s;
+  display: flex;
+  position: absolute;
+  left: 0;
+
+  &.FmKaba_enabled {
+    opacity: 1;
+  }
+
+  & > * {
+    background-color: var(--amll-lp-color, white);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    width: clamp(.5em, 1vh, 3em);
+    height: clamp(.5em, 1vh, 3em);
+    margin-right: 4px;
+    display: inline-block;
+  }
+
+  &.FmKaba_duet {
+    transform-origin: center;
+    right: 0;
+  }
+}
+
+.FmKaba_disableSpring > *, .FmKaba_disableSpring .FmKaba_lyricLine {
+  transition: filter .25s, transform .5s, background-color .25s, box-shadow .25s;
+}
+
+.FmKaba_tmpDisableTransition {
+  transition: none !important;
+}
+
+.amll-lyric-player {
+  --lyric-line-padding-x: 1em;
+
+  @media screen and (width <= 500px) {
+    --lyric-line-padding-x: 20px;
+  }
+
+  &:hover .FmKaba_lyricLine, &:hover .FmKaba_lyricLineWrapper {
+    filter: unset !important;
+  }
+
+  &:not(.FmKaba_playing) .FmKaba_bgWrapper {
+    opacity: 1;
+    width: 100%;
+    position: relative;
+    top: auto;
+    bottom: auto;
+    left: 0;
+  }
+
+  &.FmKaba_hasDuetLine {
+    & .FmKaba_lyricLine:not(.FmKaba_lyricDuetLine) {
+      padding-right: 15%;
+    }
+
+    & .FmKaba_lyricDuetLine {
+      padding-left: 15%;
+    }
+
+    & .FmKaba_lyricLineWrapper:has(.FmKaba_lyricDuetLine) {
+      align-items: flex-end;
+
+      & .FmKaba_bgWrapper {
+        transform-origin: 100% 0;
+      }
+
+      & .FmKaba_bgWrapperTop {
+        transform-origin: 100% 100%;
+      }
+    }
+  }
+}
+
+.amll-lyrics-container[data-v-6812cbce] {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  opacity: 0;
+  transition: opacity 120ms cubic-bezier(0.2, 0, 0, 1);
+}
+.amll-lyrics-container.is-visible[data-v-6812cbce] {
+  opacity: 1;
+}
+[data-v-6812cbce] .amll-lyric-player {
+  --amll-lp-font-size: 1em;
+  --amll-lp-color: var(--lp-color, #fff);
+  width: 100%;
+  height: 100%;
+}
+[data-v-6812cbce] :lang(zh) {
+  font-family: var(--lyric-font-zh, inherit);
+}
+[data-v-6812cbce] :lang(ja) {
+  font-family: var(--lyric-font-ja, inherit);
+}
+[data-v-6812cbce] :lang(ko) {
+  font-family: var(--lyric-font-ko, inherit);
+}
+[data-v-6812cbce] :lang(und-Latn) {
+  font-family: var(--lyric-font-latin, inherit);
+}
+[data-v-6812cbce] .lp-line.lp-credit {
+  position: absolute !important;
+  left: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  padding-top: 0.5em !important;
+  padding-left: var(--lyric-line-padding-x, 1em) !important;
+  padding-right: var(--lyric-line-padding-x, 1em) !important;
+  text-align: left !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  font-size: inherit !important;
+  line-height: 1.4 !important;
+  pointer-events: auto !important;
+  z-index: 10 !important;
+  background: none !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+  contain: none !important;
+  overflow: visible !important;
+}
+[data-v-6812cbce] .lp-line.lp-credit:hover,[data-v-6812cbce] .lp-line.lp-credit:active,[data-v-6812cbce] [class*="bottomLine"],[data-v-6812cbce] [class*="bottomLine"]:hover,[data-v-6812cbce] [class*="bottomLine"]:active {
+  background: none !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+}
+@media (max-width: 990px) {
+[data-v-6812cbce] .lp-line.lp-credit {
+    padding-left: var(--lyric-line-padding-x, 1em) !important;
+    padding-right: var(--lyric-line-padding-x, 1em) !important;
+}
+}
+
+.lyric-area[data-v-0ce3a445] {
+  filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.2));
+  mask: linear-gradient(
+    180deg,
+    hsla(0, 0%, 100%, 0) 0,
+    hsla(0, 0%, 100%, 0.6) 5%,
+    #fff 10%,
+    #fff 75%,
+    hsla(0, 0%, 100%, 0.6) 85%,
+    hsla(0, 0%, 100%, 0)
+  );
+}
+
+/* 顶部/底部遮罩：多段非线性 alpha，避免暗色渐变出色阶 */
+.cover-mask-top[data-v-0ce3a445] {
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0.44) 12%,
+    rgba(0, 0, 0, 0.36) 25%,
+    rgba(0, 0, 0, 0.27) 40%,
+    rgba(0, 0, 0, 0.18) 55%,
+    rgba(0, 0, 0, 0.1) 70%,
+    rgba(0, 0, 0, 0.04) 85%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+.cover-mask-bottom[data-v-0ce3a445] {
+  background-image: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.5) 0%,
+    rgba(0, 0, 0, 0.44) 12%,
+    rgba(0, 0, 0, 0.36) 25%,
+    rgba(0, 0, 0, 0.27) 40%,
+    rgba(0, 0, 0, 0.18) 55%,
+    rgba(0, 0, 0, 0.1) 70%,
+    rgba(0, 0, 0, 0.04) 85%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+.lyric-credit-line[data-v-0ce3a445] {
+  font-size: max(0.5em, 10px);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  text-align: left;
+  width: 100%;
+}
+.lyric-credit[data-v-0ce3a445] {
+  margin-left: 0.5em;
+}

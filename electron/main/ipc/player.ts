@@ -30,16 +30,10 @@ import { getMainWindow, setTaskbarProgress } from "@main/window";
 import { store } from "@main/store";
 import { appName, getSongCacheDir } from "@main/utils/config";
 import * as songCache from "@main/services/songCache";
-import { parseArtists, parseAlbum, formatArtists, artistNames } from "@main/utils/metadata";
+import { parseArtists, parseAlbum, formatArtists } from "@main/utils/metadata";
 import { playerLog } from "@main/utils/logger";
 import { ErrorCode } from "@shared/types/errors";
-import type {
-  Artist,
-  LoadOptions,
-  RepeatMode,
-  ShuffleMode,
-  PlayerState,
-} from "@shared/types/player";
+import type { LoadOptions, RepeatMode, ShuffleMode, PlayerState } from "@shared/types/player";
 import type { MediaEvent } from "@main/services/media";
 import { JsPlayerEvent } from "@splayer/audio-engine";
 
@@ -253,21 +247,13 @@ export const registerPlayerIpc = (): void => {
       // 写一次 SMTC/托盘/标题
       const applyDisplay = (
         title: string,
-        artists: Artist[],
+        artist: string,
         album: string,
         coverData: Buffer | undefined,
         durationMs: number,
       ): void => {
-        const artistText = formatArtists(artists);
-        const header = artistText ? `${title} - ${artistText}` : title || appName;
-        mediaService.setMetadata({
-          title,
-          artists: artistNames(artists),
-          album,
-          coverData,
-          coverUrl,
-          durationMs,
-        });
+        const header = artist ? `${title} - ${artist}` : title || appName;
+        mediaService.setMetadata({ title, artist, album, coverData, coverUrl, durationMs });
         mediaService.setPlayState({ status: autoPlay ? "Playing" : "Paused" });
         getMainWindow()?.setTitle(header);
         setTraySongName(header);
@@ -277,13 +263,13 @@ export const registerPlayerIpc = (): void => {
       if (authoritative) {
         applyDisplay(
           authoritative.title || source.split(/[/\\]/).pop() || source,
-          authoritative.artists ?? [],
+          formatArtists(authoritative.artists ?? []),
           authoritative.album?.name ?? "",
           undefined,
           authoritative.duration ?? 0,
         );
       } else {
-        applyDisplay(source.split(/[/\\]/).pop() || source, [], "", undefined, 0);
+        applyDisplay(source.split(/[/\\]/).pop() || source, "", "", undefined, 0);
       }
       const meta = await inst.load(source, cueRange ? false : autoPlay);
       if (cueRange) {
@@ -294,16 +280,19 @@ export const registerPlayerIpc = (): void => {
       const durationMs = toDisplayDurationMs(nativeDurationMs);
       const fallbackTitle = meta.title || source.split(/[/\\]/).pop() || source;
       const displayTitle = authoritative?.title ?? fallbackTitle;
-      const displayArtists = authoritative
-        ? (authoritative.artists ?? [])
-        : parseArtists(meta.artist ?? "");
+      const displayArtist = authoritative
+        ? formatArtists(authoritative.artists ?? [])
+        : formatArtists(parseArtists(meta.artist ?? ""));
       const displayAlbum = authoritative?.album?.name ?? parseAlbum(meta.album ?? "")?.name ?? "";
       // 本地封面
       const localCover = isRemote ? null : (inst.getCoverRaw() ?? null);
-      applyDisplay(displayTitle, displayArtists, displayAlbum, localCover ?? undefined, durationMs);
+      applyDisplay(displayTitle, displayArtist, displayAlbum, localCover ?? undefined, durationMs);
       if (!isRemote) setTaskbarThumbnailCover(meta.cover);
       // Last.fm
-      const primaryArtist = displayArtists[0]?.name ?? "";
+      const primaryArtist =
+        authoritative?.artists?.[0]?.name ??
+        parseArtists(meta.artist ?? "")[0]?.name ??
+        displayArtist;
       lastfm.onTrackLoaded({
         title: displayTitle,
         artist: primaryArtist,
@@ -319,7 +308,7 @@ export const registerPlayerIpc = (): void => {
           if (seq !== loadSeq) return;
           mediaService.setMetadata({
             title: displayTitle,
-            artists: artistNames(displayArtists),
+            artist: displayArtist,
             album: displayAlbum,
             coverData: buf,
             coverUrl,

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Component } from "vue";
-import { usePopupZIndex } from "@/composables/useZIndex";
 
 export interface DropdownMenuItem {
   /** 唯一标识 */
@@ -44,8 +43,6 @@ const emit = defineEmits<{
   select: [key: string];
 }>();
 
-const { zIndex, onOpenChange } = usePopupZIndex();
-
 /** 显示的项 */
 const visibleItems = computed(() =>
   props.items
@@ -66,7 +63,7 @@ const handleSelect = (item: DropdownMenuItem): void => {
 /** 内容区域样式 */
 const contentClass = computed(() =>
   [
-    "min-w-32 rounded-lg shadow-lg p-1 text-sm data-[state=open]:animate-popover-in data-[state=closed]:animate-popover-out",
+    "z-300 min-w-32 rounded-lg shadow-lg p-1 text-sm data-[state=open]:animate-popover-in data-[state=closed]:animate-popover-out",
     props.cover
       ? "bg-black/55 backdrop-blur-xl backdrop-saturate-160 border border-solid border-white/10"
       : "bg-surface-bright",
@@ -85,7 +82,7 @@ const menuItemClass = computed(() =>
 </script>
 
 <template>
-  <DropdownMenuRoot @update:open="onOpenChange">
+  <DropdownMenuRoot>
     <DropdownMenuTrigger as="div" class="inline-flex">
       <slot name="trigger" />
     </DropdownMenuTrigger>
@@ -97,7 +94,6 @@ const menuItemClass = computed(() =>
         :side-offset="sideOffset"
         :avoid-collisions="true"
         :collision-padding="12"
-        :style="{ zIndex }"
         :class="contentClass"
       >
         <template v-for="(item, index) in visibleItems" :key="item.key">
@@ -114,7 +110,6 @@ const menuItemClass = computed(() =>
                 :side-offset="4"
                 :avoid-collisions="true"
                 :collision-padding="12"
-                :style="{ zIndex }"
                 :class="[contentClass, 'max-h-60 overflow-y-auto']"
               >
                 <template v-for="(child, childIndex) in item.children" :key="child.key">

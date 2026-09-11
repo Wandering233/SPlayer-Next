@@ -44,7 +44,7 @@
     "start": "electron-vite preview",
     "dev": "pnpm build:native --dev && tsx scripts/dev.ts",
     "build": "rimraf dist && pnpm build:native && pnpm typecheck && electron-vite build",
-    "postinstall": "node node_modules/electron/install.js && electron-rebuild -f -w better-sqlite3",
+    "postinstall": "electron-rebuild -f -w better-sqlite3",
     "build:unpack": "pnpm build && electron-builder --dir --config electron-builder.config.ts",
     "build:win": "pnpm build && tsx scripts/gen-license.ts && electron-builder --config electron-builder.config.ts --win",
     "build:mac": "pnpm build && electron-builder --config electron-builder.config.ts --mac",
@@ -54,6 +54,15 @@
     "docs:preview": "vitepress preview docs"
   },
   "dependencies": {
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/cli": "8.5.1",
+    "@capacitor/core": "8.5.1",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/keyboard": "^8.0.5",
+    "@capacitor/network": "^8.0.1",
+    "@capacitor/preferences": "^8.0.1",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.3",
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
     "@hono/node-server": "^2.1.0",
@@ -71,6 +80,7 @@
   },
   "devDependencies": {
     "@applemusic-like-lyrics/core": "^0.5.2",
+    "@capacitor/android": "8.5.1",
     "@electron-toolkit/eslint-config-ts": "^3.1.0",
     "@electron-toolkit/tsconfig": "^2.0.0",
     "@electron/rebuild": "^4.2.0",

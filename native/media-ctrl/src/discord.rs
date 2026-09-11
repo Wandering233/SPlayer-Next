@@ -240,10 +240,9 @@ impl Worker {
             DiscordDisplayMode::Details => StatusDisplayType::Details,
         };
 
-        let artist_text = data.meta.artist_text();
         let mut activity = Activity::new()
             .details(&data.meta.title)
-            .state(&artist_text)
+            .state(&data.meta.artist)
             .activity_type(ActivityType::Listening)
             .assets(assets)
             .buttons(buttons)
