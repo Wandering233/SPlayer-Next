@@ -1,0 +1,8 @@
+
+:where(.s-button) {
+  border: none;
+  background: transparent;
+}
+:where(.s-button.has-border) {
+  border: 1px solid;
+}

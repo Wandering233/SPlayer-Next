@@ -1,0 +1,326 @@
+const defaultPluginsConfig = {
+  enabled: {},
+  priority: {
+    musicUrl: []
+  },
+  perPlugin: {}
+};
+const HOTKEY_ACTIONS = [
+  {
+    id: "player.togglePlay",
+    labelKey: "settings.hotkeys.actions.togglePlay",
+    defaultBinding: {
+      inApp: "Space",
+      global: "CommandOrControl+Shift+Space"
+    },
+    allowGlobal: true
+  },
+  {
+    id: "player.prev",
+    labelKey: "settings.hotkeys.actions.prev",
+    defaultBinding: {
+      inApp: "CommandOrControl+Left",
+      global: "CommandOrControl+Shift+Left"
+    },
+    allowGlobal: true
+  },
+  {
+    id: "player.next",
+    labelKey: "settings.hotkeys.actions.next",
+    defaultBinding: {
+      inApp: "CommandOrControl+Right",
+      global: "CommandOrControl+Shift+Right"
+    },
+    allowGlobal: true
+  },
+  {
+    id: "player.seekBack",
+    labelKey: "settings.hotkeys.actions.seekBack",
+    // 全局留空：避免与 prev 的 global 冲突
+    defaultBinding: { inApp: "Shift+Left", global: null },
+    allowGlobal: true
+  },
+  {
+    id: "player.seekForward",
+    labelKey: "settings.hotkeys.actions.seekForward",
+    defaultBinding: { inApp: "Shift+Right", global: null },
+    allowGlobal: true
+  },
+  {
+    id: "player.volumeUp",
+    labelKey: "settings.hotkeys.actions.volumeUp",
+    defaultBinding: {
+      inApp: "CommandOrControl+Up",
+      global: "CommandOrControl+Shift+Up"
+    },
+    allowGlobal: true
+  },
+  {
+    id: "player.volumeDown",
+    labelKey: "settings.hotkeys.actions.volumeDown",
+    defaultBinding: {
+      inApp: "CommandOrControl+Down",
+      global: "CommandOrControl+Shift+Down"
+    },
+    allowGlobal: true
+  },
+  {
+    id: "player.cycleRepeat",
+    labelKey: "settings.hotkeys.actions.cycleRepeat",
+    defaultBinding: { inApp: "CommandOrControl+R", global: null },
+    allowGlobal: true
+  },
+  {
+    id: "player.toggleShuffle",
+    labelKey: "settings.hotkeys.actions.toggleShuffle",
+    defaultBinding: { inApp: "CommandOrControl+S", global: null },
+    allowGlobal: true
+  },
+  {
+    id: "window.toggleDesktopLyric",
+    labelKey: "settings.hotkeys.actions.toggleDesktopLyric",
+    defaultBinding: { inApp: "CommandOrControl+L", global: null },
+    allowGlobal: true
+  },
+  {
+    id: "window.toggleDynamicIsland",
+    labelKey: "settings.hotkeys.actions.toggleDynamicIsland",
+    defaultBinding: { inApp: "CommandOrControl+I", global: null },
+    allowGlobal: true
+  },
+  {
+    id: "window.toggleTaskbarLyric",
+    labelKey: "settings.hotkeys.actions.toggleTaskbarLyric",
+    defaultBinding: { inApp: "CommandOrControl+B", global: null },
+    allowGlobal: true
+  },
+  {
+    id: "view.openPlayer",
+    labelKey: "settings.hotkeys.actions.openPlayer",
+    defaultBinding: { inApp: "CommandOrControl+Enter", global: null },
+    allowGlobal: false
+  },
+  {
+    id: "view.closePlayer",
+    labelKey: "settings.hotkeys.actions.closePlayer",
+    defaultBinding: { inApp: "CommandOrControl+Escape", global: null },
+    allowGlobal: false
+  },
+  {
+    id: "view.togglePlaylist",
+    labelKey: "settings.hotkeys.actions.togglePlaylist",
+    defaultBinding: { inApp: "CommandOrControl+P", global: null },
+    allowGlobal: false
+  },
+  {
+    id: "view.openSearch",
+    labelKey: "settings.hotkeys.actions.openSearch",
+    defaultBinding: { inApp: "CommandOrControl+F", global: null },
+    allowGlobal: false
+  },
+  {
+    id: "view.searchInPage",
+    labelKey: "settings.hotkeys.actions.searchInPage",
+    defaultBinding: { inApp: "/", global: null },
+    allowGlobal: false
+  }
+];
+const defaultHotkeyBindings = HOTKEY_ACTIONS.reduce((acc, meta) => {
+  acc[meta.id] = { ...meta.defaultBinding };
+  return acc;
+}, {});
+const defaultHotkeyConfig = {
+  globalEnabled: true,
+  bindings: defaultHotkeyBindings
+};
+const DYNAMIC_ISLAND_BASE_HEIGHT = 40;
+const defaultSystemConfig = {
+  player: {
+    autoPlay: false,
+    rememberLastTrack: true,
+    fadeEnabled: true,
+    fadeDuration: 200,
+    outputDevice: null,
+    volume: 1,
+    loudnessNormalization: false,
+    equalizer: {
+      enabled: false,
+      preset: "flat",
+      bands: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      preamp: 0
+    },
+    lyricOffsets: {}
+  },
+  media: {
+    systemMediaControls: true,
+    discord: {
+      enabled: false,
+      showWhenPaused: false,
+      displayMode: "name"
+    }
+  },
+  library: {
+    scanDirs: []
+  },
+  desktopLyric: {
+    fontSize: 24,
+    fontWeight: 600,
+    fontFamily: "",
+    showTranslation: true,
+    doubleLine: true,
+    align: "center",
+    wordByWord: true,
+    autoGenerateWordByWord: true,
+    playedColor: "rgb(254, 121, 113)",
+    unplayedColor: "rgb(255, 255, 255)",
+    strokeColor: "rgba(0, 0, 0, 0.5)",
+    backgroundMask: false,
+    backgroundMaskColor: "rgba(0, 0, 0, 0.3)",
+    alwaysShowSongInfo: false,
+    limitBounds: false,
+    animation: true,
+    alwaysOnTop: true,
+    locked: false,
+    useCSSDrag: false
+  },
+  dynamicIsland: {
+    scale: 1,
+    fontWeight: 500,
+    fontFamily: "",
+    wordByWord: true,
+    transition: "bounce",
+    playedColor: "rgba(255, 255, 255, 1)",
+    unplayedColor: "rgba(255, 255, 255, 0.5)",
+    backgroundColor: "rgba(0, 0, 0, 1)",
+    alwaysOnTop: true,
+    snapCentered: true,
+    notchFusion: false,
+    nonOcclusive: false,
+    doubleLine: false,
+    showTranslation: false,
+    useCSSDrag: false
+  },
+  taskbarLyric: {
+    position: "auto",
+    autoMaxWidth: true,
+    autoAdjustOccupiedSpace: false,
+    maxWidth: 400,
+    leftMargin: 0,
+    rightMargin: 0,
+    colorMode: "taskbar",
+    showBackground: false,
+    doubleLine: true,
+    showTranslation: true,
+    showCover: true,
+    wordByWord: true,
+    fontSize: 14,
+    fontWeight: 400,
+    fontFamily: ""
+  },
+  lyric: {
+    enableOnlineTTMLLyric: false,
+    amllDbServer: "https://amlldb.bikonoo.com/%p/%s.ttml"
+  },
+  localLyric: {
+    enableLocalTTMLOverride: false,
+    repoDir: ""
+  },
+  cache: {
+    dir: null,
+    songCache: {
+      enabled: false,
+      cacheStreaming: false,
+      sizeLimitGb: 10
+    }
+  },
+  download: {
+    enabled: false,
+    dir: null,
+    quality: "lossless",
+    usePlaybackForDownload: false,
+    fileTemplate: "{artist} - {title}",
+    folderScheme: "none",
+    overwritePolicy: "rename",
+    embedCover: true,
+    embedMeta: true,
+    embedLyric: true,
+    writeLrc: false,
+    saveTtml: false,
+    lyricFileFormat: "enhanced-lrc"
+  },
+  streaming: {
+    enabled: true
+  },
+  lastfm: {
+    enabled: false,
+    scrobble: true,
+    nowPlaying: true,
+    loveSync: true
+  },
+  externalApi: {
+    enabled: false,
+    wsEnabled: false,
+    allowLan: false,
+    port: 14558
+  },
+  mcp: {
+    enabled: false,
+    port: 14559,
+    accessKey: ""
+  },
+  update: {
+    autoCheck: true,
+    channel: "stable"
+  },
+  system: {
+    rememberWindowState: true,
+    borderlessWindow: true,
+    taskbarProgress: true,
+    taskbarThumbnailCover: true,
+    uiZoom: 100,
+    onboardingCompleted: false,
+    agreedAgreementVersion: 1,
+    neteaseRealIp: false,
+    kugouLoginVersion: "standard",
+    networkProxy: {
+      protocol: "off",
+      host: "127.0.0.1",
+      port: 7890
+    },
+    neteaseScrobbleEnabled: false,
+    neteaseScrobbleMode: "ncbl",
+    registerOrpheusProtocol: false
+  },
+  windowStates: {
+    main: {
+      width: 1280,
+      height: 800,
+      x: null,
+      y: null,
+      maximized: false
+    },
+    desktopLyric: {
+      width: 800,
+      height: 200,
+      x: null,
+      y: null,
+      visible: false
+    },
+    dynamicIsland: {
+      mode: "snapped",
+      x: null,
+      y: null,
+      visible: false
+    },
+    taskbarLyric: {
+      visible: false
+    }
+  },
+  plugins: defaultPluginsConfig,
+  hotkeys: defaultHotkeyConfig
+};
+export {
+  DYNAMIC_ISLAND_BASE_HEIGHT as D,
+  HOTKEY_ACTIONS as H,
+  defaultSystemConfig as d
+};

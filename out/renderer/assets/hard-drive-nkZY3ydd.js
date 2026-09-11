@@ -1,0 +1,22 @@
+import { m as markRaw, C as openBlock, y as createElementBlock, z as createBaseVNode } from "./runtime-dom.esm-bundler-qZya7aYr.js";
+const _hoisted_1 = {
+  viewBox: "0 0 24 24",
+  width: "1em",
+  height: "1em"
+};
+function render(_ctx, _cache) {
+  return openBlock(), createElementBlock("svg", _hoisted_1, [..._cache[0] || (_cache[0] = [
+    createBaseVNode("path", {
+      fill: "none",
+      stroke: "currentColor",
+      "stroke-linecap": "round",
+      "stroke-linejoin": "round",
+      "stroke-width": "2",
+      d: "M10 16h.01m-7.798-4.423a2 2 0 0 0-.212.896V18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-5.527a2 2 0 0 0-.212-.896L18.55 5.11A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11zm19.734.436H2.054M6 16h.01"
+    }, null, -1)
+  ])]);
+}
+const IconLucideHardDrive = markRaw({ name: "lucide-hard-drive", render });
+export {
+  IconLucideHardDrive as I
+};

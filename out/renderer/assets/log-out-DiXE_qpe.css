@@ -1,0 +1,12 @@
+
+.window-control-button[data-v-96513beb] {
+  position: relative;
+}
+.window-control-button[data-v-96513beb]::before {
+  content: "";
+  position: absolute;
+  inset: -12px -6px;
+}
+.window-control-button-close[data-v-96513beb]::before {
+  right: -12px;
+}
